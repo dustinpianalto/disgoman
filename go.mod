@@ -1,4 +1,4 @@
-module djpianalto.com/disgoman
+module github.com/dustinpianalto/disgoman
 
 go 1.14
 
