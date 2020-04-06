@@ -113,7 +113,10 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 			Color:       0xFF0000,
 		}
 		if !command.Hidden {
-			session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 		return
 	}
@@ -131,7 +134,10 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 			Color:       0xFF0000,
 		}
 		if !command.Hidden {
-			session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 		return
 	}
@@ -144,7 +150,10 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		}
 
 		if !command.Hidden {
-			session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 		return
 	}
