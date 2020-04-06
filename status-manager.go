@@ -13,12 +13,12 @@ import (
  * Disgoman (c) 2020 Dusty.P/dustinpianalto
  */
 
-// Add a status to the manager
+// AddStatus to the manager
 func (s *StatusManager) AddStatus(status string) {
 	s.Values = append(s.Values, status)
 }
 
-// Remove a status from the manager
+// RemoveStatus from the manager
 func (s *StatusManager) RemoveStatus(status string) []string {
 	for i, v := range s.Values {
 		if v == status {
@@ -29,19 +29,19 @@ func (s *StatusManager) RemoveStatus(status string) []string {
 	return s.Values
 }
 
-// Sets interval to new value
+// SetsInterval changes the update interval to new value
 func (s *StatusManager) SetInterval(interval string) {
 	s.Interval = interval
 }
 
-// Update the status now
+// UpdateStatus actually updates the status of the bot
 func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 	i := rand.Intn(len(s.Values))
 	err := session.UpdateStatus(0, s.Values[i])
 	return err
 }
 
-// Default StatusManager ready function which updates the status at the specified interval
+// OnReady is the default StatusManager ready function which updates the status at the specified interval
 func (s *StatusManager) OnReady(session *discordgo.Session, _ *discordgo.Ready) {
 	interval, err := time.ParseDuration(s.Interval)
 	if err != nil {
