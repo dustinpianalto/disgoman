@@ -6,13 +6,13 @@ package disgoman
  * Disgoman (c) 2020 Dusty.P/dustinpianalto
  */
 
-// Function to invoke for command
+// CommandInvokeFunc is the function type for commands
 type CommandInvokeFunc func(Context, []string) error
 
-// Function to get prefixes
+// PrefixesFunc to get prefixes.
 type PrefixesFunc func(string) []string
 
-// Function to run on command error
+// OnErrorFunc to run on command error
 type OnErrorFunc func(Context, string, error)
 
 // Permission type to help with managing permissions for commands
