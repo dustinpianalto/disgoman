@@ -35,7 +35,7 @@ func (c *CommandManager) AddCommand(command *Command) error {
 	return nil
 }
 
-// Removes the command named from the Commands array
+// RemovesCommand removes the command named from the Commands array
 func (c *CommandManager) RemoveCommand(name string) error {
 	deleted := false
 	if _, ok := c.Commands[name]; ok {
@@ -48,7 +48,7 @@ func (c *CommandManager) RemoveCommand(name string) error {
 	return nil
 }
 
-// Is the user ID passed in an owner of the bot
+// IsOwner checks if the user ID passed in an owner of the bot
 func (c *CommandManager) IsOwner(id string) bool {
 	for _, o := range c.Owners {
 		if o == id {
