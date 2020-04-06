@@ -148,6 +148,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		User:    m.Author,
 		Guild:   guild,
 		Member:  m.Member,
+		Invoked: invoked,
 	}
 
 	err = command.Invoke(context, cmd[1:])

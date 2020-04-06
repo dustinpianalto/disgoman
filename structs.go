@@ -40,4 +40,5 @@ type Context struct {
 	User    *discordgo.User
 	Guild   *discordgo.Guild
 	Member  *discordgo.Member
+	Invoked string
 }
