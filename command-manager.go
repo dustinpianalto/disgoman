@@ -35,7 +35,7 @@ func (c *CommandManager) AddCommand(command *Command) error {
 	return nil
 }
 
-// RemovesCommand removes the command named from the Commands array
+// RemoveCommand removes the command named from the Commands array
 func (c *CommandManager) RemoveCommand(name string) error {
 	deleted := false
 	if _, ok := c.Commands[name]; ok {
