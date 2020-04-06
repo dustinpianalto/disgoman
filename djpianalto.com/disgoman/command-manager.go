@@ -15,26 +15,15 @@ import (
 	"strings"
 )
 
-func (c *CommandManager) AddCommand(name string, aliases []string, desc string, ownerOnly, hidden bool, perms Permission, command CommandInvokeFunc) error {
-	if _, ok := c.Commands[name]; ok {
-		return errors.New(fmt.Sprintf("A command named %v already exists", name))
-	}
+func (c *CommandManager) AddCommand(aliases []string, command *Command) error {
 	for _, alias := range aliases {
-		if _, ok := c.Aliases[alias]; ok {
+		if _, ok := c.Commands[alias]; ok {
 			return errors.New(fmt.Sprintf("An alias named %v already exists", alias))
 		}
 	}
-	c.Commands[name] = &Command{
-		Name:                name,
-		Description:         desc,
-		OwnerOnly:           ownerOnly,
-		Hidden:              hidden,
-		RequiredPermissions: perms,
-		Invoke:              command,
-	}
 	if len(aliases) > 0 {
 		for _, alias := range aliases {
-			c.Aliases[alias] = name
+			c.Commands[alias] = command
 		}
 	}
 	return nil

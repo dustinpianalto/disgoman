@@ -26,6 +26,7 @@ type StatusManager struct {
 
 type Command struct {
 	Name                string
+	Aliases             []string
 	Description         string
 	OwnerOnly           bool
 	Hidden              bool
