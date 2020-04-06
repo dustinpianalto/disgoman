@@ -63,14 +63,14 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	prefixes := c.Prefixes(m.GuildID)
 	var prefix string
+	var has bool
 	for _, prefix = range prefixes {
 		if strings.HasPrefix(content, prefix) {
+			has = true
 			break
 		}
 	}
-	fmt.Println(prefix)
-	fmt.Println(prefixes)
-	if prefix == "" {
+	if !has {
 		return // If we didn't find a valid prefix then exit
 	}
 
