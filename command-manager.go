@@ -15,7 +15,11 @@ import (
 	"strings"
 )
 
-func (c *CommandManager) AddCommand(aliases []string, command *Command) error {
+func (c *CommandManager) AddCommand(command *Command) error {
+	var aliases = []string{command.Name}
+	if command.Aliases != nil {
+		aliases = append(aliases, command.Aliases...)
+	}
 	for _, alias := range aliases {
 		if _, ok := c.Commands[alias]; ok {
 			return errors.New(fmt.Sprintf("An alias named %v already exists", alias))
@@ -29,29 +33,16 @@ func (c *CommandManager) AddCommand(aliases []string, command *Command) error {
 	return nil
 }
 
-func (c *CommandManager) RemoveAliasesFor(name string) {
-	for alias, cmd := range c.Aliases {
-		if cmd == name {
-			delete(c.Aliases, alias)
-		}
-	}
-}
-
 func (c *CommandManager) RemoveCommand(name string) error {
+	deleted := false
 	if _, ok := c.Commands[name]; ok {
 		delete(c.Commands, name)
-		c.RemoveAliasesFor(name)
-		return nil
+		deleted = true
 	}
-	return errors.New(fmt.Sprintf("%v not in commands", name))
-}
-
-func (c *CommandManager) RemoveAlias(alias string) error {
-	if _, ok := c.Aliases[alias]; ok {
-		delete(c.Aliases, alias)
-		return nil
+	if !deleted {
+		return errors.New("command doesn't exist")
 	}
-	return errors.New(fmt.Sprintf("%v not in aliases", alias))
+	return nil
 }
 
 func (c *CommandManager) IsOwner(id string) bool {
@@ -90,14 +81,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	var command *Command
 	invoked := cmd[0]
-	if n, ok := c.Aliases[invoked]; ok {
-		if cmnd, ok := c.Commands[n]; ok {
-			command = cmnd
-		} else {
-			log.Fatal("Alias Not Found in Commands")
-			return
-		}
-	} else if cmnd, ok := c.Commands[invoked]; ok {
+	if cmnd, ok := c.Commands[invoked]; ok {
 		command = cmnd
 	} else {
 		log.Fatal("Command Not Found")
