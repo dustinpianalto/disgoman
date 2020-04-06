@@ -68,6 +68,8 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 			break
 		}
 	}
+	fmt.Println(prefix)
+	fmt.Println(prefixes)
 	if prefix == "" {
 		return // If we didn't find a valid prefix then exit
 	}
@@ -84,13 +86,13 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	if cmnd, ok := c.Commands[invoked]; ok {
 		command = cmnd
 	} else {
-		log.Fatal("Command Not Found")
+		fmt.Println("Command Not Found")
 		return
 	}
 
 	channel, err := session.Channel(m.ChannelID)
 	if err != nil {
-		log.Fatal("Couldn't retrieve Channel.")
+		fmt.Println("Couldn't retrieve Channel.")
 		return
 	}
 
