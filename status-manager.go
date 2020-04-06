@@ -34,12 +34,14 @@ func (s *StatusManager) SetInterval(interval string) {
 	s.Interval = interval
 }
 
+// Update the status now
 func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 	i := rand.Intn(len(s.Values))
 	err := session.UpdateStatus(0, s.Values[i])
 	return err
 }
 
+// Default StatusManager ready function which updates the status at the specified interval
 func (s *StatusManager) OnReady(session *discordgo.Session, _ *discordgo.Ready) {
 	interval, err := time.ParseDuration(s.Interval)
 	if err != nil {

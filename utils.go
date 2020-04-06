@@ -8,6 +8,16 @@ package disgoman
 
 import "github.com/bwmarrin/discordgo"
 
+// Returns a default Status Manager
+func GetDefaultStatusManager() StatusManager {
+	return StatusManager{
+		[]string{
+			"Golang!",
+			"DiscordGo!",
+			"Disgoman!",
+		}, "10s"}
+}
+
 // Checks the channel and guild permissions to see if the member has the needed permissions
 func CheckPermissions(session *discordgo.Session, member discordgo.Member, channel discordgo.Channel, perms Permission) bool {
 	if perms == 0 {

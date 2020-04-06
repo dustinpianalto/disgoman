@@ -15,6 +15,8 @@ import (
 	"strings"
 )
 
+// Adds the Command at the address passed in to the Commands array on the CommandManager.
+//   - Will error if the command's name or any of the aliases already exist.
 func (c *CommandManager) AddCommand(command *Command) error {
 	var aliases = []string{command.Name}
 	if command.Aliases != nil {
@@ -33,6 +35,7 @@ func (c *CommandManager) AddCommand(command *Command) error {
 	return nil
 }
 
+// Removes the command named from the Commands array
 func (c *CommandManager) RemoveCommand(name string) error {
 	deleted := false
 	if _, ok := c.Commands[name]; ok {
@@ -45,6 +48,7 @@ func (c *CommandManager) RemoveCommand(name string) error {
 	return nil
 }
 
+// Checks if the user ID is in the Owners array
 func (c *CommandManager) IsOwner(id string) bool {
 	for _, o := range c.Owners {
 		if o == id {
@@ -54,6 +58,12 @@ func (c *CommandManager) IsOwner(id string) bool {
 	return false
 }
 
+// The OnMessage event handler
+// Checks if the message has one of the specified prefixes
+// Checks if the message contains one of the commands
+// Processes the arguments to pass into the command
+// Checks the permissions for the command
+// Runs the command function with the current Context
 func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.Bot && c.IgnoreBots {
 		return // If the author is a bot and ignore bots is set then just exit

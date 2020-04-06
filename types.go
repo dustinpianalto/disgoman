@@ -15,6 +15,7 @@ type PrefixesFunc func(string) []string
 // Function to run on command error
 type OnErrorFunc func(Context, string, error)
 
+// Permission type to help with managing permissions for commands
 type Permission int
 
 // Defining permissions based on the Discord API
