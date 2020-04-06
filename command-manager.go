@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-// Adds the Command at the address passed in to the Commands array on the CommandManager.
+// AddCommand adds the Command at the address passed in to the Commands array on the CommandManager.
 //   - Will error if the command's name or any of the aliases already exist.
 func (c *CommandManager) AddCommand(command *Command) error {
 	var aliases = []string{command.Name}
@@ -24,7 +24,7 @@ func (c *CommandManager) AddCommand(command *Command) error {
 	}
 	for _, alias := range aliases {
 		if _, ok := c.Commands[alias]; ok {
-			return errors.New(fmt.Sprintf("An alias named %v already exists", alias))
+			return fmt.Errorf("An alias named %v already exists", alias)
 		}
 	}
 	if len(aliases) > 0 {
@@ -48,7 +48,7 @@ func (c *CommandManager) RemoveCommand(name string) error {
 	return nil
 }
 
-// Checks if the user ID is in the Owners array
+// Is the user ID passed in an owner of the bot
 func (c *CommandManager) IsOwner(id string) bool {
 	for _, o := range c.Owners {
 		if o == id {
@@ -58,7 +58,7 @@ func (c *CommandManager) IsOwner(id string) bool {
 	return false
 }
 
-// The OnMessage event handler
+// OnMessage event handler
 // Checks if the message has one of the specified prefixes
 // Checks if the message contains one of the commands
 // Processes the arguments to pass into the command
