@@ -14,7 +14,6 @@ type CommandManager struct {
 	StatusManager    StatusManager
 	OnErrorFunc      OnErrorFunc
 	Commands         map[string]*Command
-	Aliases          map[string]string
 	IgnoreBots       bool
 	CheckPermissions bool
 }
