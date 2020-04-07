@@ -27,40 +27,21 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 		return true // If no permissions are required then just return true
 	}
 
-	//for _, overwrite := range channel.PermissionOverwrites {
-	//	if overwrite.ID == member.User.ID {
-	//		if overwrite.Allow & int(perms) != 0 {
-	//			return true // If the channel has an overwrite for the user then true
-	//		} else if overwrite.Deny & int(perms) != 0 {
-	//			return false // If there is an explicit deny then false
-	//		}
-	//	}
-	//}
+	for _, overwrite := range channel.PermissionOverwrites {
+		if overwrite.ID == member.User.ID {
+			if overwrite.Allow&int(perms) != 0 {
+				return true // If the channel has an overwrite for the user then true
+			} else if overwrite.Deny&int(perms) != 0 {
+				return false // If there is an explicit deny then false
+			}
+		}
+	}
 
 	for _, roleID := range member.Roles {
 		role, err := session.State.Role(channel.GuildID, roleID)
 		if err != nil {
 			fmt.Println(err)
 		}
-		//roleID = strings.TrimSpace(roleID)
-		//fmt.Println(roleID)
-		//guild, err := session.Guild(channel.GuildID)
-		//if err != nil {
-		//	fmt.Println("Error getting Guild, ", err)
-		//	return false
-		//}
-		//var role discordgo.Role
-		//var found bool
-		//for _, role := range guild.Roles {
-		//	if role.ID == roleID {
-		//		found = true
-		//		break
-		//	}
-		//}
-		//if !found {
-		//	continue
-		//}
-		fmt.Println(role.ID)
 
 		for _, overwrite := range channel.PermissionOverwrites {
 			if overwrite.ID == roleID {
