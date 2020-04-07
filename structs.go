@@ -8,7 +8,7 @@ package disgoman
 
 import "github.com/bwmarrin/discordgo"
 
-// A CommandManager which will hold the info and structures required for handling command messages
+// CommandManager holds the info and structures required for handling command messages
 type CommandManager struct {
 	// Function which returns a list of strings which are to be used as prefixes
 	Prefixes PrefixesFunc
@@ -26,7 +26,7 @@ type CommandManager struct {
 	CheckPermissions bool
 }
 
-// A StatusManager which will update the status of the bot
+// StatusManager updates the status of the bot
 type StatusManager struct {
 	// Values that will be used for the status
 	Values []string
@@ -34,7 +34,7 @@ type StatusManager struct {
 	Interval string
 }
 
-// A Command with all of the info specific to this command
+// Command contains all of the info specific to this command
 type Command struct {
 	// The name of the command
 	Name string
@@ -52,7 +52,7 @@ type Command struct {
 	Invoke CommandInvokeFunc
 }
 
-// Context that a command needs to run
+// Context contains all the context that a command needs to run
 type Context struct {
 	// Discordgo Session Object
 	Session *discordgo.Session
