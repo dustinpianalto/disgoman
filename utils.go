@@ -62,15 +62,15 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 		//}
 		fmt.Println(role.ID)
 
-		//for _, overwrite := range channel.PermissionOverwrites {
-		//	if overwrite.ID == roleID {
-		//		if overwrite.Allow & int(perms) != 0 {
-		//			return true // If the channel has an overwrite for the role then true
-		//		} else if overwrite.Deny & int(perms) != 0 {
-		//			return false // If there is an explicit deny then false
-		//		}
-		//	}
-		//}
+		for _, overwrite := range channel.PermissionOverwrites {
+			if overwrite.ID == roleID {
+				if overwrite.Allow&int(perms) != 0 {
+					return true // If the channel has an overwrite for the role then true
+				} else if overwrite.Deny&int(perms) != 0 {
+					return false // If there is an explicit deny then false
+				}
+			}
+		}
 
 		if role.Permissions&int(PermissionAdministrator) != 0 {
 			return true // If they are an administrator then they automatically have all permissions
