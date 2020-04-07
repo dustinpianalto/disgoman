@@ -39,11 +39,20 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 
 	for _, roleID := range member.Roles {
 		guild, err := session.Guild(channel.GuildID)
-		fmt.Println(guild.Roles)
-		role, err := session.State.Role(member.GuildID, roleID)
 		if err != nil {
-			fmt.Println("Role Error, ", err)
-			return false // There is something wrong with the role, default to false
+			fmt.Println("Error getting Guild, ", err)
+			return false
+		}
+		var role discordgo.Role
+		var found bool
+		for _, role := range guild.Roles {
+			if role.ID == roleID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			continue
 		}
 
 		//for _, overwrite := range channel.PermissionOverwrites {
