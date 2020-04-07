@@ -57,7 +57,7 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 		if !found {
 			continue
 		}
-		fmt.Println(role.Name)
+		fmt.Println(role)
 
 		//for _, overwrite := range channel.PermissionOverwrites {
 		//	if overwrite.ID == roleID {
