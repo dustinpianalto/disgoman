@@ -34,7 +34,7 @@ func (s *StatusManager) SetInterval(interval string) {
 	s.Interval = interval
 }
 
-// UpdateStatus actually updates the status of the bot
+// UpdateStatus updates the status of the bot
 func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 	i := rand.Intn(len(s.Values))
 	err := session.UpdateStatus(0, s.Values[i])
