@@ -29,7 +29,7 @@ func (s *StatusManager) RemoveStatus(status string) []string {
 	return s.Values
 }
 
-// SetsInterval changes the update interval to new value
+// SetInterval changes the update interval to new value
 func (s *StatusManager) SetInterval(interval string) {
 	s.Interval = interval
 }
