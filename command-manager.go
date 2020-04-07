@@ -120,13 +120,13 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		return
 	}
 
-	me, err := session.GuildMember(m.GuildID, session.State.User.ID)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	//me, err := session.GuildMember(m.GuildID, session.State.User.ID)
+	//if err != nil {
+	//	log.Fatal(err)
+	//	return
+	//}
 
-	if !CheckPermissions(session, *me, *channel, command.RequiredPermissions) {
+	if !CheckPermissions(session, m.Author.ID, *channel, command.RequiredPermissions) {
 		embed := &discordgo.MessageEmbed{
 			Title:       "Insufficient Permissions",
 			Description: "I don't have the correct permissions to run this command.",
