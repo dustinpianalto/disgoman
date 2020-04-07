@@ -58,8 +58,7 @@ func (c *CommandManager) IsOwner(id string) bool {
 	return false
 }
 
-// OnMessage
-// checks if the message has one of the specified prefixes
+// OnMessage checks if the message has one of the specified prefixes
 // and if the message contains one of the commands.
 // It then processes the arguments to pass into the command,
 // checks the permissions for the command, and
