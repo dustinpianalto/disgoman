@@ -126,7 +126,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	//	return
 	//}
 
-	if !CheckPermissions(session, m.Author.ID, *channel, command.RequiredPermissions) {
+	if !CheckPermissions(session, session.State.User.ID, *channel, command.RequiredPermissions) {
 		embed := &discordgo.MessageEmbed{
 			Title:       "Insufficient Permissions",
 			Description: "I don't have the correct permissions to run this command.",
