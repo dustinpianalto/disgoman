@@ -22,13 +22,13 @@ func GetDefaultStatusManager() StatusManager {
 }
 
 // CheckPermissions checks the channel and guild permissions to see if the member has the needed permissions
-func CheckPermissions(session *discordgo.Session, member discordgo.Member, channel discordgo.Channel, perms Permission) bool {
+func CheckPermissions(session *discordgo.Session, memberID string, channel discordgo.Channel, perms Permission) bool {
 	if perms == 0 {
 		return true // If no permissions are required then just return true
 	}
 
 	for _, overwrite := range channel.PermissionOverwrites {
-		if overwrite.ID == member.User.ID {
+		if overwrite.ID == memberID {
 			if overwrite.Allow&int(perms) != 0 {
 				return true // If the channel has an overwrite for the user then true
 			} else if overwrite.Deny&int(perms) != 0 {
@@ -37,6 +37,11 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 		}
 	}
 
+	member, err := session.State.Member(channel.GuildID, memberID)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
 	for _, roleID := range member.Roles {
 		role, err := session.State.Role(channel.GuildID, roleID)
 		if err != nil {
