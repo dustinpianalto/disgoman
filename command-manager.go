@@ -16,7 +16,7 @@ import (
 )
 
 // AddCommand adds the Command at the address passed in to the Commands array on the CommandManager.
-//   - Will error if the command's name or any of the aliases already exist.
+// This will return an error if the command's name or any of the aliases already exist.
 func (c *CommandManager) AddCommand(command *Command) error {
 	var aliases = []string{command.Name}
 	if command.Aliases != nil {
@@ -58,12 +58,12 @@ func (c *CommandManager) IsOwner(id string) bool {
 	return false
 }
 
-// OnMessage event handler
-// Checks if the message has one of the specified prefixes
-// Checks if the message contains one of the commands
-// Processes the arguments to pass into the command
-// Checks the permissions for the command
-// Runs the command function with the current Context
+// OnMessage
+// checks if the message has one of the specified prefixes
+// and if the message contains one of the commands.
+// It then processes the arguments to pass into the command,
+// checks the permissions for the command, and
+// runs the command function with the current Context.
 func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.Bot && c.IgnoreBots {
 		return // If the author is a bot and ignore bots is set then just exit
