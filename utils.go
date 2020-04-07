@@ -9,7 +9,6 @@ package disgoman
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"strings"
 )
 
 // GetDefaultStatusManager returns a default Status Manager
@@ -39,25 +38,29 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 	//}
 
 	for _, roleID := range member.Roles {
-		roleID = strings.TrimSpace(roleID)
-		fmt.Println(roleID)
-		guild, err := session.Guild(channel.GuildID)
+		role, err := session.State.Role(channel.GuildID, roleID)
 		if err != nil {
-			fmt.Println("Error getting Guild, ", err)
-			return false
+			fmt.Println(err)
 		}
-		var role discordgo.Role
-		var found bool
-		for _, role := range guild.Roles {
-			if role.ID == roleID {
-				found = true
-				break
-			}
-		}
-		if !found {
-			continue
-		}
-		fmt.Println(role)
+		//roleID = strings.TrimSpace(roleID)
+		//fmt.Println(roleID)
+		//guild, err := session.Guild(channel.GuildID)
+		//if err != nil {
+		//	fmt.Println("Error getting Guild, ", err)
+		//	return false
+		//}
+		//var role discordgo.Role
+		//var found bool
+		//for _, role := range guild.Roles {
+		//	if role.ID == roleID {
+		//		found = true
+		//		break
+		//	}
+		//}
+		//if !found {
+		//	continue
+		//}
+		fmt.Println(role.ID)
 
 		//for _, overwrite := range channel.PermissionOverwrites {
 		//	if overwrite.ID == roleID {
