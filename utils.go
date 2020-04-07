@@ -6,7 +6,10 @@ package disgoman
  * Disgoman (c) 2020 Dusty.P/dustinpianalto
  */
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+	"github.com/bwmarrin/discordgo"
+)
 
 // GetDefaultStatusManager returns a default Status Manager
 func GetDefaultStatusManager() StatusManager {
@@ -37,6 +40,7 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 	for _, roleID := range member.Roles {
 		role, err := session.State.Role(member.GuildID, roleID)
 		if err != nil {
+			fmt.Println("Role Error")
 			return false // There is something wrong with the role, default to false
 		}
 
