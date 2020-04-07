@@ -9,6 +9,7 @@ package disgoman
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"strings"
 )
 
 // GetDefaultStatusManager returns a default Status Manager
@@ -38,6 +39,7 @@ func CheckPermissions(session *discordgo.Session, member discordgo.Member, chann
 	//}
 
 	for _, roleID := range member.Roles {
+		roleID = strings.TrimSpace(roleID)
 		fmt.Println(roleID)
 		guild, err := session.Guild(channel.GuildID)
 		if err != nil {
