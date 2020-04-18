@@ -27,3 +27,16 @@ func (c *Context) SendFile(filename string, file io.Reader) (*discordgo.Message,
 }
 
 // TODO Combine these to all use ChannelMessageSendComplex
+
+// SendError makes a CommandError and sends it to the ErrorChannel. This includes the current context in the error.
+// Will block if the channel buffer is full. It is up to the client to implement a channel for the errors as well as
+// a function to handle the errors from said channel. If the ErrorChannel is nil then this does nothing.
+func (c *Context) SendError(message string, err error) {
+	if c.ErrorChannel != nil {
+		c.ErrorChannel <- CommandError{
+			Context: *c,
+			Message: message,
+			Error:   err,
+		}
+	}
+}

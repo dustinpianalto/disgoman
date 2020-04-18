@@ -16,8 +16,8 @@ type CommandManager struct {
 	Owners []string
 	// Status Manager which will handle updating the status of the bot
 	StatusManager StatusManager
-	// Function to call when there is an error with a command (not used currently)
-	OnErrorFunc OnErrorFunc
+	// Channel to send errors to
+	ErrorChannel chan CommandError
 	// Map of the command names to the pointer of the command to call
 	Commands map[string]*Command
 	// Should we ignore bots when processing commands
@@ -52,6 +52,16 @@ type Command struct {
 	Invoke CommandInvokeFunc
 }
 
+// CommandError contains all the information needed to process an error in a command
+type CommandError struct {
+	// The Context the command was run in
+	Context Context
+	// Error Message
+	Message string
+	// The Error object
+	Error error
+}
+
 // Context contains all the context that a command needs to run
 type Context struct {
 	// Discordgo Session Object
@@ -68,4 +78,6 @@ type Context struct {
 	Member *discordgo.Member
 	// Name of the command as it was invoked (this is so you know what alias was used to call the command)
 	Invoked string
+	// Error channel
+	ErrorChannel chan CommandError
 }

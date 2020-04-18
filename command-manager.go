@@ -160,18 +160,15 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	guild, _ := session.Guild(m.GuildID)
 
 	context := Context{
-		Session: session,
-		Channel: channel,
-		Message: m.Message,
-		User:    m.Author,
-		Guild:   guild,
-		Member:  m.Member,
-		Invoked: invoked,
+		Session:      session,
+		Channel:      channel,
+		Message:      m.Message,
+		User:         m.Author,
+		Guild:        guild,
+		Member:       m.Member,
+		Invoked:      invoked,
+		ErrorChannel: c.ErrorChannel,
 	}
 
-	err = command.Invoke(context, cmd[1:])
-	if err != nil && c.OnErrorFunc != nil {
-		c.OnErrorFunc(context, cmd[0], err)
-	}
-
+	go command.Invoke(context, cmd[1:])
 }

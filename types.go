@@ -7,13 +7,10 @@ package disgoman
  */
 
 // CommandInvokeFunc is the function type for commands
-type CommandInvokeFunc func(Context, []string) error
+type CommandInvokeFunc func(Context, []string)
 
 // PrefixesFunc gets the prefixes for the bot.
 type PrefixesFunc func(string) []string
-
-// OnErrorFunc runs upon command error
-type OnErrorFunc func(Context, string, error)
 
 // Permission type to help with managing permissions for commands
 type Permission int
