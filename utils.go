@@ -23,15 +23,21 @@ func GetDefaultStatusManager() StatusManager {
 }
 
 // HasHigherRole checks if the caller has a higher role than the target in the given guild
-func HasHigherRole(session *discordgo.Session, guildID string, callerID string, targetID string) bool {
+func HasHigherRole(session *discordgo.Session, guildID string, callerID string, targetID string) (bool, error) {
 	guild, _ := session.Guild(guildID)
-	if callerID == guild.OwnerID {
-		return true // If the caller is the guild owner then they are automatically higher than everyone
+	if targetID == guild.OwnerID {
+		return false, nil // If the target is the guild owner then no one is higher than them
 	}
-	caller, _ := session.GuildMember(guildID, callerID)
+	if callerID == guild.OwnerID {
+		return true, nil // If the caller is the guild owner then they are automatically higher than everyone
+	}
+	caller, err := session.GuildMember(guildID, callerID)
+	if err != nil {
+		return false, err
+	}
 	target, err := session.GuildMember(guildID, targetID)
 	if err != nil {
-		fmt.Println(err)
+		return false, err
 	}
 	var callerRoles []*discordgo.Role
 	for _, roleID := range caller.Roles {
@@ -46,15 +52,15 @@ func HasHigherRole(session *discordgo.Session, guildID string, callerID string, 
 	}
 	sort.Slice(targetRoles, func(i, j int) bool { return targetRoles[i].Position > targetRoles[j].Position })
 	if len(callerRoles) == 0 {
-		return false // If the caller doesn't have any roles then they can't be higher than the target
+		return false, nil // If the caller doesn't have any roles then they can't be higher than the target
 	}
 	if len(callerRoles) > 0 && len(targetRoles) == 0 {
-		return true // If the caller has a role and the target doesn't then that role is higher
+		return true, nil // If the caller has a role and the target doesn't then that role is higher
 	}
 	if callerRoles[0].Position > targetRoles[0].Position {
-		return true
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 // CheckPermissions checks the channel and guild permissions to see if the member has the needed permissions
