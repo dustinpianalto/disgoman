@@ -9,6 +9,7 @@ package disgoman
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"sort"
 )
 
 // GetDefaultStatusManager returns a default Status Manager
@@ -19,6 +20,28 @@ func GetDefaultStatusManager() StatusManager {
 			"DiscordGo!",
 			"Disgoman!",
 		}, "10s"}
+}
+
+// HasHigherRole checks if the caller has a higher role than the target in the given guild
+func HasHigherRole(session *discordgo.Session, guildID string, callerID string, targetID string) bool {
+	caller, _ := session.GuildMember(guildID, callerID)
+	target, _ := session.GuildMember(guildID, targetID)
+	var callerRoles []*discordgo.Role
+	for _, roleID := range caller.Roles {
+		role, _ := session.State.Role(guildID, roleID)
+		callerRoles = append(callerRoles, role)
+	}
+	sort.Slice(callerRoles, func(i, j int) bool { return callerRoles[i].Position > callerRoles[j].Position })
+	var targetRoles []*discordgo.Role
+	for _, roleID := range target.Roles {
+		role, _ := session.State.Role(guildID, roleID)
+		targetRoles = append(targetRoles, role)
+	}
+	sort.Slice(targetRoles, func(i, j int) bool { return targetRoles[i].Position > targetRoles[j].Position })
+	if callerRoles[0].Position > targetRoles[0].Position {
+		return true
+	}
+	return false
 }
 
 // CheckPermissions checks the channel and guild permissions to see if the member has the needed permissions
