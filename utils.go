@@ -24,6 +24,10 @@ func GetDefaultStatusManager() StatusManager {
 
 // HasHigherRole checks if the caller has a higher role than the target in the given guild
 func HasHigherRole(session *discordgo.Session, guildID string, callerID string, targetID string) bool {
+	guild, _ := session.Guild(guildID)
+	if callerID == guild.OwnerID {
+		return true // If the caller is the guild owner then they are automatically higher than everyone
+	}
 	caller, _ := session.GuildMember(guildID, callerID)
 	target, _ := session.GuildMember(guildID, targetID)
 	var callerRoles []*discordgo.Role
@@ -38,6 +42,12 @@ func HasHigherRole(session *discordgo.Session, guildID string, callerID string, 
 		targetRoles = append(targetRoles, role)
 	}
 	sort.Slice(targetRoles, func(i, j int) bool { return targetRoles[i].Position > targetRoles[j].Position })
+	if len(callerRoles) == 0 {
+		return false // If the caller doesn't have any roles then they can't be higher than the target
+	}
+	if len(callerRoles) > 0 && len(targetRoles) == 0 {
+		return true // If the caller has a role and the target doesn't then that role is higher
+	}
 	if callerRoles[0].Position > targetRoles[0].Position {
 		return true
 	}
