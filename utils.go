@@ -7,6 +7,7 @@ package disgoman
  */
 
 import (
+	"errors"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"sort"
@@ -33,11 +34,11 @@ func HasHigherRole(session *discordgo.Session, guildID string, callerID string, 
 	}
 	caller, err := session.GuildMember(guildID, callerID)
 	if err != nil {
-		return false, err
+		return false, errors.New("can't find caller member")
 	}
 	target, err := session.GuildMember(guildID, targetID)
 	if err != nil {
-		return false, err
+		return false, errors.New("can't find target member")
 	}
 	var callerRoles []*discordgo.Role
 	for _, roleID := range caller.Roles {
