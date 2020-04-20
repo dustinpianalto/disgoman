@@ -29,7 +29,10 @@ func HasHigherRole(session *discordgo.Session, guildID string, callerID string, 
 		return true // If the caller is the guild owner then they are automatically higher than everyone
 	}
 	caller, _ := session.GuildMember(guildID, callerID)
-	target, _ := session.GuildMember(guildID, targetID)
+	target, err := session.GuildMember(guildID, targetID)
+	if err != nil {
+		fmt.Println(err)
+	}
 	var callerRoles []*discordgo.Role
 	for _, roleID := range caller.Roles {
 		role, _ := session.State.Role(guildID, roleID)
