@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/kballard/go-shellquote"
-	"log"
 	"strings"
 )
 
@@ -83,10 +82,32 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		return // If we didn't find a valid prefix then exit
 	}
 
+	channel, err := session.Channel(m.ChannelID)
+	if err != nil {
+		fmt.Println("Couldn't retrieve Channel.")
+		return
+	}
+
+	guild, _ := session.Guild(m.GuildID)
+
 	// If we found our prefix then remove it and split the command into pieces
 	cmd, err := shellquote.Split(strings.TrimPrefix(content, prefix))
 	if err != nil {
-		log.Fatal(err)
+		ctx := Context{
+			Session:      session,
+			Channel:      channel,
+			Message:      m.Message,
+			User:         m.Author,
+			Guild:        guild,
+			Member:       m.Member,
+			Invoked:      nil,
+			ErrorChannel: c.ErrorChannel,
+		}
+		c.ErrorChannel <- CommandError{
+			Context: ctx,
+			Message: "",
+			Error:   err,
+		}
 		return
 	}
 
@@ -99,65 +120,64 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		return
 	}
 
-	channel, err := session.Channel(m.ChannelID)
-	if err != nil {
-		fmt.Println("Couldn't retrieve Channel.")
-		return
-	}
-
 	if !CheckPermissions(session, m.Author.ID, *channel, command.RequiredPermissions) {
-		embed := &discordgo.MessageEmbed{
-			Title:       "Insufficient Permissions",
-			Description: "You don't have the correct permissions to run this command.",
-			Color:       0xFF0000,
+		ctx := Context{
+			Session:      session,
+			Channel:      channel,
+			Message:      m.Message,
+			User:         m.Author,
+			Guild:        guild,
+			Member:       m.Member,
+			Invoked:      cmd[0],
+			ErrorChannel: c.ErrorChannel,
 		}
-		if !command.Hidden {
-			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
-			if err != nil {
-				log.Println(err)
-			}
+		c.ErrorChannel <- CommandError{
+			Context: ctx,
+			Message: "You don't have the correct permissions to run this command.",
+			Error:   errors.New("insufficient permissions"),
 		}
 		return
 	}
-
-	//me, err := session.GuildMember(m.GuildID, session.State.User.ID)
-	//if err != nil {
-	//	log.Fatal(err)
-	//	return
-	//}
 
 	if !CheckPermissions(session, session.State.User.ID, *channel, command.RequiredPermissions) {
-		embed := &discordgo.MessageEmbed{
-			Title:       "Insufficient Permissions",
-			Description: "I don't have the correct permissions to run this command.",
-			Color:       0xFF0000,
+		ctx := Context{
+			Session:      session,
+			Channel:      channel,
+			Message:      m.Message,
+			User:         m.Author,
+			Guild:        guild,
+			Member:       m.Member,
+			Invoked:      cmd[0],
+			ErrorChannel: c.ErrorChannel,
 		}
-		if !command.Hidden {
-			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
-			if err != nil {
-				log.Println(err)
-			}
+		c.ErrorChannel <- CommandError{
+			Context: ctx,
+			Message: "I don't have the correct permissions to run this command.",
+			Error:   errors.New("insufficient permissions"),
 		}
 		return
+
 	}
 
 	if command.OwnerOnly && !c.IsOwner(m.Author.ID) {
-		embed := &discordgo.MessageEmbed{
-			Title:       "You can't run that command!",
-			Description: "Sorry, only the bot owner(s) can run that command!",
-			Color:       0xff0000,
+		ctx := Context{
+			Session:      session,
+			Channel:      channel,
+			Message:      m.Message,
+			User:         m.Author,
+			Guild:        guild,
+			Member:       m.Member,
+			Invoked:      cmd[0],
+			ErrorChannel: c.ErrorChannel,
 		}
-
-		if !command.Hidden {
-			_, err := session.ChannelMessageSendEmbed(m.ChannelID, embed)
-			if err != nil {
-				log.Println(err)
-			}
+		c.ErrorChannel <- CommandError{
+			Context: ctx,
+			Message: "Sorry, only the bot owner(s) can run that command!",
+			Error:   errors.New("insufficient permissions"),
 		}
 		return
-	}
 
-	guild, _ := session.Guild(m.GuildID)
+	}
 
 	context := Context{
 		Session:      session,
