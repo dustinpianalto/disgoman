@@ -90,25 +90,30 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	guild, _ := session.Guild(m.GuildID)
 
+	var cmd []string
 	// If we found our prefix then remove it and split the command into pieces
-	cmd, err := shellquote.Split(strings.TrimPrefix(content, prefix))
+	cmd, err = shellquote.Split(strings.TrimPrefix(content, prefix))
 	if err != nil {
-		ctx := Context{
-			Session:      session,
-			Channel:      channel,
-			Message:      m.Message,
-			User:         m.Author,
-			Guild:        guild,
-			Member:       m.Member,
-			Invoked:      "",
-			ErrorChannel: c.ErrorChannel,
+		if err.Error() == "Unterminated double-quoted string" || err.Error() == "Unterminated single-quoted string" {
+			cmd = strings.Split(strings.TrimPrefix(content, prefix), " ")
+		} else {
+			ctx := Context{
+				Session:      session,
+				Channel:      channel,
+				Message:      m.Message,
+				User:         m.Author,
+				Guild:        guild,
+				Member:       m.Member,
+				Invoked:      "",
+				ErrorChannel: c.ErrorChannel,
+			}
+			c.ErrorChannel <- CommandError{
+				Context: ctx,
+				Message: "",
+				Error:   err,
+			}
+			return
 		}
-		c.ErrorChannel <- CommandError{
-			Context: ctx,
-			Message: "",
-			Error:   err,
-		}
-		return
 	}
 
 	var command *Command
