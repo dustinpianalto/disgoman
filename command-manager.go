@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/kballard/go-shellquote"
-	"log"
 	"strings"
 )
 
@@ -69,7 +68,6 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	content := m.Content
-	log.Println(content)
 
 	prefixes := c.Prefixes(m.GuildID)
 	var prefix string
