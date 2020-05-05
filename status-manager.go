@@ -50,14 +50,14 @@ func (s *StatusManager) OnReady(session *discordgo.Session, _ *discordgo.Ready) 
 
 	err = s.UpdateStatus(session)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
 		err = s.UpdateStatus(session)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 	}
 }
