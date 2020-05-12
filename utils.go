@@ -20,7 +20,7 @@ func GetDefaultStatusManager() StatusManager {
 			"Golang!",
 			"DiscordGo!",
 			"Disgoman!",
-		}, "10s"}
+		}, "30s"}
 }
 
 // HasHigherRole checks if the caller has a higher role than the target in the given guild
