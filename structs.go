@@ -48,6 +48,8 @@ type Command struct {
 	Hidden bool
 	// Permissions that are required for the command to function
 	RequiredPermissions Permission
+	// Should the message content be sanitized before invoking the command
+	SanitizeEveryone bool
 	// Function to invoke when command is called
 	Invoke CommandInvokeFunc
 }
