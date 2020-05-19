@@ -126,7 +126,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	if command.SanitizeEveryone {
-		for i := 1; i < len(cmd[1:]); i++ {
+		for i := 1; i < len(cmd); i++ {
 			cmd[i] = strings.ReplaceAll(cmd[i], "@everyone", "@\ufff0everyone")
 			cmd[i] = strings.ReplaceAll(cmd[i], "@here", "@\ufff0here")
 		}
