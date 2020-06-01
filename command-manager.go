@@ -116,6 +116,10 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		}
 	}
 
+	if len(cmd) < 1 {
+		return
+	}
+
 	var command *Command
 	invoked := cmd[0]
 	if cmnd, ok := c.Commands[invoked]; ok {
