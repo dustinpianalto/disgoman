@@ -94,6 +94,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	// If we found our prefix then remove it and split the command into pieces
 	cmd, err = shellquote.Split(strings.TrimPrefix(content, prefix))
 	if err != nil {
+		fmt.Println(err.Error())
 		if err.Error() == "Unterminated double-quoted string" || err.Error() == "Unterminated single-quoted string" {
 			cmd = strings.Split(strings.TrimPrefix(content, prefix), " ")
 		} else {
