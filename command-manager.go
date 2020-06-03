@@ -9,9 +9,10 @@ package disgoman
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/kballard/go-shellquote"
-	"strings"
 )
 
 // AddCommand adds the Command at the address passed in to the Commands array on the CommandManager.
@@ -95,7 +96,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	cmd, err = shellquote.Split(strings.TrimPrefix(content, prefix))
 	if err != nil {
 		fmt.Println(err.Error())
-		if err.Error() == "Unterminated double-quoted string" || err.Error() == "Unterminated single-quoted string" {
+		if strings.Contains(err.Error(), "Unterminated") {
 			cmd = strings.Split(strings.TrimPrefix(content, prefix), " ")
 		} else {
 			ctx := Context{
