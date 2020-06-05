@@ -91,6 +91,17 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	guild, _ := session.Guild(m.GuildID)
 
+	ctx := Context{
+		Session:      session,
+		Channel:      channel,
+		Message:      m.Message,
+		User:         m.Author,
+		Guild:        guild,
+		Member:       m.Member,
+		Invoked:      "",
+		ErrorChannel: c.ErrorChannel,
+	}
+
 	var cmd []string
 	// If we found our prefix then remove it and split the command into pieces
 	cmd, err = shellquote.Split(strings.TrimPrefix(content, prefix))
@@ -99,16 +110,6 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 		if strings.Contains(err.Error(), "Unterminated") {
 			cmd = strings.Split(strings.TrimPrefix(content, prefix), " ")
 		} else {
-			ctx := Context{
-				Session:      session,
-				Channel:      channel,
-				Message:      m.Message,
-				User:         m.Author,
-				Guild:        guild,
-				Member:       m.Member,
-				Invoked:      "",
-				ErrorChannel: c.ErrorChannel,
-			}
 			c.ErrorChannel <- CommandError{
 				Context: ctx,
 				Message: "",
@@ -123,8 +124,8 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	var command *Command
-	invoked := cmd[0]
-	if cmnd, ok := c.Commands[invoked]; ok {
+	ctx.Invoked = cmd[0]
+	if cmnd, ok := c.Commands[ctx.Invoked]; ok {
 		command = cmnd
 	} else {
 		fmt.Println("Command Not Found")
@@ -139,16 +140,6 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	if !CheckPermissions(session, m.Author.ID, *channel, command.RequiredPermissions) {
-		ctx := Context{
-			Session:      session,
-			Channel:      channel,
-			Message:      m.Message,
-			User:         m.Author,
-			Guild:        guild,
-			Member:       m.Member,
-			Invoked:      cmd[0],
-			ErrorChannel: c.ErrorChannel,
-		}
 		c.ErrorChannel <- CommandError{
 			Context: ctx,
 			Message: "You don't have the correct permissions to run this command.",
@@ -158,16 +149,6 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	if !CheckPermissions(session, session.State.User.ID, *channel, command.RequiredPermissions) {
-		ctx := Context{
-			Session:      session,
-			Channel:      channel,
-			Message:      m.Message,
-			User:         m.Author,
-			Guild:        guild,
-			Member:       m.Member,
-			Invoked:      cmd[0],
-			ErrorChannel: c.ErrorChannel,
-		}
 		c.ErrorChannel <- CommandError{
 			Context: ctx,
 			Message: "I don't have the correct permissions to run this command.",
@@ -178,16 +159,6 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	}
 
 	if command.OwnerOnly && !c.IsOwner(m.Author.ID) {
-		ctx := Context{
-			Session:      session,
-			Channel:      channel,
-			Message:      m.Message,
-			User:         m.Author,
-			Guild:        guild,
-			Member:       m.Member,
-			Invoked:      cmd[0],
-			ErrorChannel: c.ErrorChannel,
-		}
 		c.ErrorChannel <- CommandError{
 			Context: ctx,
 			Message: "Sorry, only the bot owner(s) can run that command!",
@@ -197,16 +168,5 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	}
 
-	context := Context{
-		Session:      session,
-		Channel:      channel,
-		Message:      m.Message,
-		User:         m.Author,
-		Guild:        guild,
-		Member:       m.Member,
-		Invoked:      invoked,
-		ErrorChannel: c.ErrorChannel,
-	}
-
-	go command.Invoke(context, cmd[1:])
+	go command.Invoke(ctx, cmd[1:])
 }
