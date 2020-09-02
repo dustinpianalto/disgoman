@@ -105,7 +105,7 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	var cmd []string
 	// If we found our prefix then remove it and split the command into pieces
 	content = strings.TrimPrefix(content, prefix)
-	r := regexp.MustCompile(`[^\s"]+|"([^"]*)"`)
+	r := regexp.MustCompile(`[^ "]+|"([^"]*)"`)
 	cmd = r.FindAllString(content, -1)
 	for i, val := range cmd {
 		cmd[i] = strings.Trim(val, "\"")
