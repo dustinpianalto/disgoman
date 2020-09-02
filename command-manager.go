@@ -9,10 +9,10 @@ package disgoman
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/kballard/go-shellquote"
 )
 
 // AddCommand adds the Command at the address passed in to the Commands array on the CommandManager.
@@ -104,19 +104,11 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 
 	var cmd []string
 	// If we found our prefix then remove it and split the command into pieces
-	cmd, err = shellquote.Split(strings.TrimPrefix(content, prefix))
-	if err != nil {
-		fmt.Println(err.Error())
-		if strings.Contains(err.Error(), "Unterminated") {
-			cmd = strings.Split(strings.TrimPrefix(content, prefix), " ")
-		} else {
-			c.ErrorChannel <- CommandError{
-				Context: ctx,
-				Message: "",
-				Error:   err,
-			}
-			return
-		}
+	content = strings.TrimPrefix(content, prefix)
+	r := regexp.MustCompile(`[^\s"]+|"([^"]*)"`)
+	cmd = r.FindAllString(content, -1)
+	for i, val := range cmd {
+		cmd[i] = strings.Trim(val, "\"")
 	}
 
 	if len(cmd) < 1 {
