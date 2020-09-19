@@ -1,8 +1,9 @@
 package disgoman
 
 import (
-	"github.com/bwmarrin/discordgo"
 	"io"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 /* context.go:
@@ -32,8 +33,8 @@ func (c *Context) SendFile(filename string, file io.Reader) (*discordgo.Message,
 // Will block if the channel buffer is full. It is up to the client to implement a channel for the errors as well as
 // a function to handle the errors from said channel. If the ErrorChannel is nil then this does nothing.
 func (c *Context) SendError(message string, err error) {
-	if c.ErrorChannel != nil {
-		c.ErrorChannel <- CommandError{
+	if c.CommandManager.ErrorChannel != nil {
+		c.CommandManager.ErrorChannel <- CommandError{
 			Context: *c,
 			Message: message,
 			Error:   err,
