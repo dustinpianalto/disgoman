@@ -92,14 +92,14 @@ func (c *CommandManager) OnMessage(session *discordgo.Session, m *discordgo.Mess
 	guild, _ := session.Guild(m.GuildID)
 
 	ctx := Context{
-		Session:      session,
-		Channel:      channel,
-		Message:      m.Message,
-		User:         m.Author,
-		Guild:        guild,
-		Member:       m.Member,
-		Invoked:      "",
-		ErrorChannel: c.ErrorChannel,
+		Session:        session,
+		Channel:        channel,
+		Message:        m.Message,
+		User:           m.Author,
+		Guild:          guild,
+		Member:         m.Member,
+		Invoked:        "",
+		CommandManager: c,
 	}
 
 	var cmd []string

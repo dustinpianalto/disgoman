@@ -80,6 +80,6 @@ type Context struct {
 	Member *discordgo.Member
 	// Name of the command as it was invoked (this is so you know what alias was used to call the command)
 	Invoked string
-	// Error channel
-	ErrorChannel chan CommandError
+	// Command Manager
+	CommandManager *CommandManager
 }
