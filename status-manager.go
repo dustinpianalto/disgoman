@@ -43,7 +43,7 @@ func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 		AFK:    false,
 	}
 	err := session.UpdateStatusComplex(usd)
-	log.Println(err.Error())
+	log.Println(err)
 	return err
 }
 
