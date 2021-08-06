@@ -13,7 +13,7 @@ type CommandInvokeFunc func(Context, []string)
 type PrefixesFunc func(string) []string
 
 // Permission type to help with managing permissions for commands
-type Permission int
+type Permission int64
 
 // Defining permissions based on the Discord API
 const (

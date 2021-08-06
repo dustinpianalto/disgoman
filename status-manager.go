@@ -37,7 +37,11 @@ func (s *StatusManager) SetInterval(interval string) {
 // UpdateStatus updates the status of the bot
 func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 	i := rand.Intn(len(s.Values))
-	err := session.UpdateStatus(0, s.Values[i])
+	usd := discordgo.UpdateStatusData {
+		Status: s.Values[i],
+		AFK: false,
+	}
+	err := session.UpdateStatusComplex(usd)
 	return err
 }
 
