@@ -1,10 +1,11 @@
 package disgoman
 
 import (
-	"github.com/bwmarrin/discordgo"
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 /* status-manager.go:
@@ -37,11 +38,12 @@ func (s *StatusManager) SetInterval(interval string) {
 // UpdateStatus updates the status of the bot
 func (s *StatusManager) UpdateStatus(session *discordgo.Session) error {
 	i := rand.Intn(len(s.Values))
-	usd := discordgo.UpdateStatusData {
+	usd := discordgo.UpdateStatusData{
 		Status: s.Values[i],
-		AFK: false,
+		AFK:    false,
 	}
 	err := session.UpdateStatusComplex(usd)
+	log.Println(err.Error())
 	return err
 }
 
