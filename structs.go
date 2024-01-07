@@ -6,7 +6,7 @@ package disgoman
  * Disgoman (c) 2020 Dusty.P/dustinpianalto
  */
 
-import "github.com/bwmarrin/discordgo"
+import "github.com/dustinpianalto/discordgo"
 
 // CommandManager holds the info and structures required for handling command messages
 type CommandManager struct {
