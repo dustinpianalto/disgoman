@@ -3,7 +3,7 @@ package disgoman
 import (
 	"io"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/dustinpianalto/discordgo"
 )
 
 /* context.go:
