@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/dustinpianalto/discordgo"
 )
 
 /* status-manager.go:
