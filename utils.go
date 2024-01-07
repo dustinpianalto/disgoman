@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/dustinpianalto/discordgo"
 )
 
 // GetDefaultStatusManager returns a default Status Manager
