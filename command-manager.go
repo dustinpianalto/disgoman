@@ -12,7 +12,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/bwmarrin/discordgo"
+	"github.com/dustinpianalto/discordgo"
 )
 
 // AddCommand adds the Command at the address passed in to the Commands array on the CommandManager.
